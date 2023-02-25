@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import getResponse from "./api/getResponse";
+import Flyout from "./components/Flyout";
 import { ingredients } from "./ingredients";
 
 const Home = () => {
@@ -7,16 +8,23 @@ const Home = () => {
   const [Ingredients, setIngredients] = useState([])
   const [search, setSearch] = useState("")
   const [FilteredIngredients, setFilteredIngredients] = useState(ingredients)
-  
+  const [showFlyout, setshowFlyout] = useState(false)
+  const [Response, setResponse] = useState('')
+  const [loading, setLoading] = useState(false)
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const response = await getResponse(Ingredients);
     console.log(response)
+    setLoading(false)
+    setResponse(response.choices[0].text)
+    setshowFlyout(true)
   }
 
   const addIngredient = (ingredient) => {
     if(Ingredients.length<= 3)
-        setIngredients(prev => [...prev, ingredient]);
+        setIngredients(prev => [...prev, ingredient.ingredient]);
   }
 
   useEffect(() => {
@@ -56,8 +64,8 @@ const Home = () => {
                         Ingredients.map((item)=>
                         {
                             return (
-                                <span className="text-white mx-2">
-                                    {`${(item.ingredient.length > 30)?item.ingredient.substring(0,27)+'...':item.ingredient}, `}
+                                <span key={item} className="text-white mx-2">
+                                    {`${(item.length > 30)?item.substring(0,27)+'...':item}, `}
                                 </span>
                             )
                         })
@@ -75,13 +83,13 @@ const Home = () => {
                             return (
                                 <div 
                                     onClick={()=>{
-                                        (Ingredients.length > 0 && Ingredients.includes(ingredient))?
-                                            setIngredients(prev => prev.filter((item)=>item.ingredientId !== ingredient.ingredientId))
+                                        (Ingredients.length > 0 && Ingredients.includes(ingredient.ingredient))?
+                                            setIngredients(prev => prev.filter((item)=>item !== ingredient.ingredient))
                                             :
                                             addIngredient(ingredient)} 
                                     }
                                     key={ingredient.ingredient} 
-                                    className={` ${(Ingredients.includes(ingredient))?'bg-violet-400':'bg-[#30004A]'} my-2 mx-2 px-4 py-2 max-h-[40px] text-white border-[1px] border-solid border-violet-900 rounded-lg cursor-pointer hover:bg-violet-500`}>
+                                    className={` ${(Ingredients.includes(ingredient.ingredient))?'bg-violet-400':'bg-[#30004A]'} my-2 mx-2 px-4 py-2 max-h-[40px] text-white border-[1px] border-solid border-violet-900 rounded-lg cursor-pointer hover:bg-violet-500`}>
                                         {ingredient.ingredient}
                                 </div>
                             )
@@ -98,6 +106,25 @@ const Home = () => {
                 Get Receipes
             </button>
         </div>
+        <Flyout showFlyout={showFlyout} setshowFlyout={setshowFlyout} Response={Response}/>
+        {
+            loading && 
+            <div className="w-screen h-full fixed top-0 bg-[rgba(0,0,0,0.9)] z-50">
+                <div class="w-full h-full flex flex-col items-center justify-center">
+                    <div
+                        class="text-violet-500 h-12 w-12 inline-block animate-spin rounded-full border-[6px] border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                        role="status">
+                        <span
+                        class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+                        >Loading...</span
+                        >
+                    </div>
+                    <div className="mt-10 px-5 py-2 text-lg font-bold tracking-wider rounded-xl bg-[rgba(0,0,0,0.9)] text-violet-500">
+                        Talking to chef <span className="underline underline-offset-4">GPT</span>....
+                    </div>
+                </div>
+            </div>
+        }
     </div>
   )
 }

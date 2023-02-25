@@ -8,8 +8,8 @@ const openai = new OpenAIApi(configuration);
 
 export default async function getResponse(ingredients){
     
-    const prompt = `Get me some recipes with ingredients: ${ingredients} and a Story with it.`
-
+    const prompt = `Get me some recipes only with ingredients: ${ingredients}, with its cooking procedure and a Story with it.`
+    console.log(prompt)
     const response = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: prompt,
