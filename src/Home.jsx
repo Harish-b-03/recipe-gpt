@@ -40,20 +40,20 @@ const Home = () => {
 
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center bg-black">
-        <div className="w-full h-[10%] px-10 flex justify-between items-center border-b-slate-900 border-solid border-b-[1px]">
+        <div className="w-full h-[10%] px-2 sm:px-10 flex justify-between items-center border-b-slate-900 border-solid border-b-[1px]">
             <div className="mx-2 text-xl font-bold text-white">
                 <span>Recipe</span>
                 <span className="text-violet-500">GPT</span>
             </div>
-            <div className="w-[300px] h-[50%] relative flex justify-center items-center">
+            <div className="w-[200px] sm:w-[300px] h-[50%] relative flex justify-center items-center">
                 <input 
                 onChange={(e)=>setSearch(e.target.value)}
                 placeholder="Search Ingredient...."
-                className="w-[300px] h-full px-5 text-white bg-[rgba(255,255,255,0.1)] rounded-xl"
+                className="w-full h-full px-5 text-white bg-[rgba(255,255,255,0.1)] rounded-xl"
                 />
             </div>
         </div>
-        <div className="w-full h-[15%] px-10 flex justify-between items-center">
+        <div className="w-full h-[15%] sm:h-[15%] px-2 sm:px-10 flex justify-between items-center">
             <div className="flex">
                 <span className="mr-4 ml-2 text-white underline underline-offset-4">
                     Ingredients Selected:
@@ -74,9 +74,9 @@ const Home = () => {
                 </div>
             </div>
         </div>
-        <div className="w-full h-[60%] overflow-y-scroll">
+        <div className="w-full h-[75%] sm:h-[60%] overflow-y-scroll">
             
-            <div className="w-full h-fit px-10 flex flex-wrap">
+            <div className="w-full h-fit px-2 sm:px-10 flex flex-wrap">
                 {
                     (FilteredIngredients.length > 0)?
                         FilteredIngredients.map((ingredient)=>{
@@ -89,7 +89,7 @@ const Home = () => {
                                             addIngredient(ingredient)} 
                                     }
                                     key={ingredient.ingredient} 
-                                    className={` ${(Ingredients.includes(ingredient.ingredient))?'bg-violet-400':'bg-[#30004A]'} my-2 mx-2 px-4 py-2 max-h-[40px] text-white border-[1px] border-solid border-violet-900 rounded-lg cursor-pointer hover:bg-violet-500`}>
+                                    className={` ${(Ingredients.includes(ingredient.ingredient))?'bg-violet-400':'bg-[#30004A]'} my-2 mx-2 px-4 py-2 max-h-fit text-white border-[1px] border-solid border-violet-900 rounded-lg cursor-pointer hover:bg-violet-500`}>
                                         {ingredient.ingredient}
                                 </div>
                             )
@@ -101,9 +101,9 @@ const Home = () => {
                 }
             </div>
         </div>
-        <div className="w-full h-[15%] flex justify-center items-center">
+        <div className="w-full h-[10%] sm:h-[15%] flex justify-center items-center">
             <button onClick={handleSubmit} className="px-5 py-2 bg-violet-100 text-violet-900 shadow-xl border-[1px] border-solid border-violet-400">
-                Get Receipes
+                Get Recipes
             </button>
         </div>
         <Flyout showFlyout={showFlyout} setshowFlyout={setshowFlyout} Response={Response}/>
