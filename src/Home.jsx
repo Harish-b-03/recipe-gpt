@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toast, Toaster } from "react-hot-toast";
 import getResponse from "./api/getResponse";
 import Loading from "./components/Atomic/Loading";
 import Flyout from "./components/Flyout";
@@ -24,6 +25,15 @@ const Home = () => {
         console.log(response)
         setResponse(response.choices[0].text)
         setshowFlyout(true)
+    } else{
+        toast.error('Please select atleast 1 ingredient',{ 
+            icon: '😊',
+            style: {
+                borderRadius: '10px',
+                background: '#333',
+                color: '#fff',
+            },
+        });
     }
     setLoading(false)
   }
@@ -45,7 +55,7 @@ const Home = () => {
   
 
   return (
-    <div className="w-full h-screen p-0 m-0 flex flex-col justify-between sm:justify-center items-center bg-black">
+    <div className="w-full h-screen p-0 m-0 flex flex-col justify-between items-center bg-black">
         
         <TopBar setSearch={setSearch}/>
         
@@ -78,6 +88,8 @@ const Home = () => {
                 }
             </div>
         </div>
+        
+        <Toaster position="top-center" gutter={8} da/>
 
         <Footer handleSubmit={handleSubmit} />
 
