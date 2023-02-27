@@ -89,7 +89,7 @@ const Home = () => {
                                             addIngredient(ingredient)} 
                                     }
                                     key={ingredient.ingredient} 
-                                    className={` ${(Ingredients.includes(ingredient.ingredient))?'bg-violet-400':'bg-[#30004A]'} my-2 mx-2 px-4 py-2 max-h-fit text-white border-[1px] border-solid border-violet-900 rounded-lg cursor-pointer hover:bg-violet-500`}>
+                                    className={` ${(Ingredients.includes(ingredient.ingredient))?'bg-violet-400':'bg-[#30004A]'} my-2 mx-2 px-4 py-2 w-full sm:w-fit max-h-fit text-white border-[1px] border-solid border-violet-900 rounded-lg cursor-pointer hover:bg-violet-500`}>
                                         {ingredient.ingredient}
                                 </div>
                             )
