@@ -41,6 +41,15 @@ const Home = () => {
   const addIngredient = (ingredient) => {
     if(Ingredients.length<= 3)
         setIngredients(prev => [...prev, ingredient.ingredient]);
+    else
+        toast.error('Select not more than 4 ingredients',{ 
+            icon: '😊',
+            style: {
+                borderRadius: '10px',
+                background: '#333',
+                color: '#fff',
+            },
+        });
   }
 
   useEffect(() => {
