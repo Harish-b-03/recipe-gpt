@@ -1,1 +1,1 @@
-# receipe-gpt
+# recipe-gpt
