@@ -1,3 +1,4 @@
+import { useState } from "react"
 
 const Label = () => {
     return (
@@ -7,8 +8,26 @@ const Label = () => {
     )
 }
 
-const SelectedIngredient = ({Ingredients}) => {
-  
+const SelectedIngredientCard = ({item, setSelectedIngredients}) => {
+    const [showRemoveButton, setShowRemoveButton] = useState(false)
+
+    return (
+        <div key={item} onMouseEnter={()=>{setShowRemoveButton(true)}} onMouseLeave={()=>{setShowRemoveButton(false)}} className="relative text-gray-200 mx-1 sm:mx-2 bg-gray-900 py-1 px-3 rounded-md cursor-pointer transition-all duration-200 hover:bg-gray-800 hover:text-white">
+            {`${(item.length > 30)?item.substring(0,27)+'...':item}`}
+            {
+                showRemoveButton &&
+                <div onClick={()=>setSelectedIngredients(prev=>prev.filter(i=>i !== item))} className="absolute top-0 right-0 h-[12px] w-[12px] -translate-y-1/2 translate-x-1/2 flex justify-center items-center text-xs bg-gray-900 rounded-full transition-all duration-200 hover:bg-red-500">
+                    <span className="">
+                        -
+                    </span>
+                </div>
+            }
+        </div>
+    )
+}
+
+const SelectedIngredient = ({Ingredients, setSelectedIngredients}) => {
+
   if(Ingredients.length === 0){
     return (
         <div className="w-full h-[15%] px-2 sm:px-10 flex justify-between items-center">
@@ -32,9 +51,7 @@ const SelectedIngredient = ({Ingredients}) => {
                     Ingredients.map((item)=>
                     {
                         return (
-                            <div key={item} className="text-white mx-1 sm:mx-2">
-                                {`${(item.length > 30)?item.substring(0,27)+'...':item}, `}
-                            </div>
+                            <SelectedIngredientCard item={item} setSelectedIngredients={setSelectedIngredients}/>
                         )
                     })
                 }

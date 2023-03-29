@@ -1,18 +1,18 @@
 
-const Suggestions = ({search, FilteredIngredients, addIngredient}) => {
+const Suggestions = ({search, FilteredIngredients, addIngredient, setSearch}) => {
   if(search !== "")
-  return (
-    <div className="absolute -bottom-[150px] left-[6px] w-[calc(100%-10px)] h-[150px] bg-[rgba(255,255,255,0.05)] rounded-bl-xl rounded-br-xl border border-solid border-[rgba(255,255,255,0.01)] overflow-y-auto">
-      {
-        FilteredIngredients.map((item, index)=>{
-          return (
-            <div key={index} onClick={()=>addIngredient(item)} className="h-8 px-5 py-1 text-gray-400 cursor-pointer hover:bg-[rgba(255,255,255,0.08)] hover:text-white">
-              {item.ingredient}
-            </div>
-          )
-        })
-      }
-    </div>    
+    return (
+      <div className="absolute -bottom-[150px] left-[6px] w-[calc(100%-10px)] h-[150px] bg-[rgba(255,255,255,0.05)] rounded-bl-xl rounded-br-xl border border-solid border-[rgba(255,255,255,0.01)] overflow-y-auto">
+        {
+          FilteredIngredients.map((item, index)=>{
+            return (
+              <div key={index} onClick={()=>{addIngredient(item); setSearch("");}} className="h-8 px-5 py-1 text-gray-400 cursor-pointer hover:bg-[rgba(255,255,255,0.08)] hover:text-white">
+                {item.ingredient}
+              </div>
+            )
+          })
+        }
+      </div>    
   )
 }
 
@@ -29,7 +29,7 @@ const InputField = ({loading, setSearch, search, FilteredIngredients, addIngredi
                     onChange={(e) => setSearch(e.target.value)}
                     className="h-full w-full py-1 px-4 bg-transparent border border-solid border-gray-700 -outline-offset-2 text-gray-200 placeholder:text-gray-700 rounded-tl-md rounded-bl-md leading-tight"
                 />
-                <Suggestions search={search} FilteredIngredients={FilteredIngredients} addIngredient={addIngredient}/>
+                <Suggestions search={search} FilteredIngredients={FilteredIngredients} addIngredient={addIngredient} setSearch={setSearch}/>
             </div>
           <button
             type="submit"

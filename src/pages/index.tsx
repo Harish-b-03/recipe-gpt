@@ -101,7 +101,7 @@ const Home = () => {
           <TopBar/>
           
           <div className="pt-[70px] w-full h-full">
-            <SelectedIngredient Ingredients={SelectedIngredients}/>
+            <SelectedIngredient Ingredients={SelectedIngredients} setSelectedIngredients={setSelectedIngredients}/>
             
             <div className="w-full h-[70%] overflow-y-scroll flex justify-center items-center">
                 <div className="relative">
