@@ -56,8 +56,10 @@ const Home = () => {
   }
 
   const addIngredient = (ingredient:ingredientType) => {
-    if(SelectedIngredients.length<= 3)
+    if(SelectedIngredients.length<= 3){
+      if(SelectedIngredients.indexOf(ingredient.ingredient) < 0)
         setSelectedIngredients(prev => [...prev, ingredient['ingredient']]);
+    }
     else
         toast.error('Select not more than 4 ingredients',{ 
             icon: '😊',

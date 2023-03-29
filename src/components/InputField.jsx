@@ -1,8 +1,7 @@
 
 const Suggestions = ({search, FilteredIngredients, addIngredient, setSearch}) => {
-  if(search !== "")
-    return (
-      <div className="absolute -bottom-[150px] left-[6px] w-[calc(100%-10px)] h-[150px] bg-[rgba(255,255,255,0.05)] rounded-bl-xl rounded-br-xl border border-solid border-[rgba(255,255,255,0.01)] overflow-y-auto">
+  return (
+      <div className={`${(search!=="")?'h-[150px] block opacity-100':' h-0 opacity-0 pointer-events-none'} absolute top-full left-[6px] w-[calc(100%-10px)] bg-[rgba(255,255,255,0.05)] rounded-bl-xl rounded-br-xl border border-solid border-[rgba(255,255,255,0.01)] overflow-y-auto transition-all duration-300`}>
         {
           FilteredIngredients.map((item, index)=>{
             return (
@@ -27,7 +26,7 @@ const InputField = ({loading, setSearch, search, FilteredIngredients, addIngredi
                     placeholder="search ingredients..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="h-full w-full py-1 px-4 bg-transparent border border-solid border-gray-700 -outline-offset-2 text-gray-200 placeholder:text-gray-700 rounded-tl-md rounded-bl-md leading-tight"
+                    className="h-full w-full py-1 px-6 bg-transparent border border-solid border-gray-700 -outline-offset-2 text-gray-200 placeholder:text-gray-700 rounded-tl-md rounded-bl-md leading-tight"
                 />
                 <Suggestions search={search} FilteredIngredients={FilteredIngredients} addIngredient={addIngredient} setSearch={setSearch}/>
             </div>
