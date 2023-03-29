@@ -105,15 +105,15 @@ const Home = () => {
           <div className="pt-[70px] w-full h-full">
             <SelectedIngredient Ingredients={SelectedIngredients} setSelectedIngredients={setSelectedIngredients}/>
             
-            <div className="w-full h-[70%] overflow-y-scroll flex justify-center items-center">
+            <div className="w-full h-[60%] md:h-[70%] md:overflow-y-scroll flex justify-center items-center">
                 <div className="relative">
                   <InputField setSearch={setSearch} loading={loading} search={search} FilteredIngredients={FilteredIngredients} addIngredient={addIngredient} handleSubmit={handleSubmit}/>
                 </div>
             </div>  
           </div>
-          <Toaster position="top-center" gutter={8}/>
+          <Toaster position="bottom-center" gutter={8}/>
 
-          {/* <Footer handleSubmit={handleSubmit} /> */}
+          <Footer handleSubmit={handleSubmit} />
 
           <Flyout showFlyout={showFlyout} setshowFlyout={setshowFlyout} Response={Response}/>
           
