@@ -7,6 +7,7 @@ import Footer from "../components/Footer";
 import SelectedIngredient from "../components/SelectedIngredient";
 import TopBar from "../components/TopBar";
 import { ingredients } from "../ingredients";
+import InputField from "../components/InputField"
 
 type ingredientType = {
   "ingredient": string,
@@ -21,7 +22,7 @@ type responseType = {
 
 const Home = () => {
   
-  const [Ingredients, setIngredients] = useState<string[]>([])
+  const [SelectedIngredients, setSelectedIngredients] = useState<string[]>([])
   const [search, setSearch] = useState("")
   const [FilteredIngredients, setFilteredIngredients] = useState<ingredientType[]>(ingredients)
   const [showFlyout, setshowFlyout] = useState(false)
@@ -31,11 +32,11 @@ const Home = () => {
   const handleSubmit = async (e:any) => {
     e.preventDefault();
     setLoading(true);
-    if(Ingredients.length > 0){
+    if(SelectedIngredients.length > 0){
         const response = await fetch('api/getResponse',{
           method: 'POST',
           headers: {"Content-type": "application/json;charset=UTF-8"},
-          body: JSON.stringify(Ingredients)
+          body: JSON.stringify(SelectedIngredients)
         });
         const data = await response.json()
         console.log(data)
@@ -55,8 +56,8 @@ const Home = () => {
   }
 
   const addIngredient = (ingredient:ingredientType) => {
-    if(Ingredients.length<= 3)
-        setIngredients(prev => [...prev, ingredient['ingredient']]);
+    if(SelectedIngredients.length<= 3)
+        setSelectedIngredients(prev => [...prev, ingredient['ingredient']]);
     else
         toast.error('Select not more than 4 ingredients',{ 
             icon: '😊',
@@ -70,12 +71,20 @@ const Home = () => {
 
   useEffect(() => {
     if(search === "")
-        setFilteredIngredients(ingredients);
-    else
-        setFilteredIngredients(ingredients.filter((item)=>{
-            var temp = item.ingredient.toLowerCase();
-            return temp.includes(search.toLowerCase());
-        }))
+        setFilteredIngredients([]);
+    else{
+      const exactResults = ingredients.filter((item)=>{
+          var temp = item.ingredient.toLowerCase();
+          return temp.startsWith(search.toLowerCase());
+      })
+
+      const relevantResults = ingredients.filter((item)=>{
+          var temp = item.ingredient.toLowerCase();
+          return temp.includes(search.toLowerCase());
+      })
+      // To get the exact results first and followed by relevant results
+      setFilteredIngredients([...exactResults, ...relevantResults])
+    }
   }, [search])
   
 
@@ -89,41 +98,20 @@ const Home = () => {
       </Head>
       <main className="w-full h-screen p-0 m-0 flex flex-col justify-between items-center bg-black">
           
-          <TopBar setSearch={setSearch}/>
+          <TopBar/>
           
-          <SelectedIngredient Ingredients={Ingredients}/>
-          
-          <div className="w-full h-[60%] overflow-y-scroll">
-              
-              <div className="w-full h-fit px-2 sm:px-10 flex flex-wrap">
-                  {
-                    (FilteredIngredients.length > 0)?
-                    FilteredIngredients.map((ingredient:ingredientType)=>{
-                              return (
-                                <div 
-                                onClick={()=>{
-                                  (Ingredients.length > 0 && Ingredients.includes(ingredient['ingredient']))?
-                                  setIngredients(prev => prev.filter((item)=>item !== ingredient['ingredient']))
-                                  :
-                                  addIngredient(ingredient)} 
-                                }
-                                      key={ingredient.ingredient} 
-                                      className={` ${(Ingredients.includes(ingredient["ingredient"]))?'bg-violet-400':'bg-[#30004A]'} my-2 mx-2 px-4 py-2 w-full sm:w-fit max-h-fit text-white border-[1px] border-solid border-violet-900 rounded-lg cursor-pointer hover:bg-violet-500`}>
-                                          {ingredient.ingredient}
-                                  </div>
-                              )
-                          })
-                          :
-                      <div className="w-full h-full text-lg text-violet-500 flex justify-center items-center">
-                          <span>No such ingredient found :(</span>
-                      </div>
-                  }
-              </div>
+          <div className="pt-[70px] w-full h-full">
+            <SelectedIngredient Ingredients={SelectedIngredients}/>
+            
+            <div className="w-full h-[70%] overflow-y-scroll flex justify-center items-center">
+                <div className="relative">
+                  <InputField setSearch={setSearch} loading={loading} search={search} FilteredIngredients={FilteredIngredients} addIngredient={addIngredient} handleSubmit={handleSubmit}/>
+                </div>
+            </div>  
           </div>
-          
           <Toaster position="top-center" gutter={8}/>
 
-          <Footer handleSubmit={handleSubmit} />
+          {/* <Footer handleSubmit={handleSubmit} /> */}
 
           <Flyout showFlyout={showFlyout} setshowFlyout={setshowFlyout} Response={Response}/>
           

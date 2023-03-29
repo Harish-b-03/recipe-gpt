@@ -11,7 +11,7 @@ const SelectedIngredient = ({Ingredients}) => {
   
   if(Ingredients.length === 0){
     return (
-        <div className="w-full h-fit px-2 sm:px-10 flex justify-between items-center">
+        <div className="w-full h-[15%] px-2 sm:px-10 flex justify-between items-center">
             <div className="w-full text-center sm:mr-4 sm:ml-2 my-1 sm:my-0 font-bold text-gray-500">
                 No Ingredients Selected
             </div>
