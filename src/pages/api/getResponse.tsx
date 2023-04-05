@@ -8,7 +8,7 @@ type data = {
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
-  apiKey: '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',
+  apiKey: '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',
 });
 
 const openai = new OpenAIApi(configuration);
