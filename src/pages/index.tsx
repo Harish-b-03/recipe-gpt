@@ -33,15 +33,26 @@ const Home = () => {
     e.preventDefault();
     setLoading(true);
     if(SelectedIngredients.length > 0){
-        const response = await fetch('api/getResponse',{
+        await fetch('api/getResponse',{
           method: 'POST',
           headers: {"Content-type": "application/json;charset=UTF-8"},
           body: JSON.stringify(SelectedIngredients)
-        });
-        const data = await response.json()
-        console.log(data)
-        setResponse(data.choices[0].text)
-        setshowFlyout(true)
+        }
+        ).then( res => res.json()
+        ).then( data => {
+          console.log(data)
+          if(data.success){
+            setResponse(data.choices[0].text)
+            setshowFlyout(true)
+          } else{
+            toast.error("An error occured")
+          }
+          setLoading(false)
+        }).catch(err => {
+          alert("error")
+          console.log(err)
+          setLoading(false)
+        })
     } else{
         toast.error('Please select atleast 1 ingredient',{ 
             icon: '😊',
