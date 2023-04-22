@@ -7,19 +7,19 @@ type data = {
 
 const { Configuration, OpenAIApi } = require("openai");
 
-const configuration = new Configuration({
-  apiKey: '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',
-});
-
-const openai = new OpenAIApi(configuration);
-
 export default async function handler(
   // ingredients
   req: NextApiRequest,
   res: NextApiResponse<data>
   ){
-    
-    const prompt = `Get me some recipes only with ingredients: ${req.body}, with its cooking procedure and a Story with it.`
+    const request = req.body
+    console.log("request", request)
+    const configuration = new Configuration({
+      apiKey: request.key,
+    });
+
+    const openai = new OpenAIApi(configuration);
+    const prompt = `Get me some recipes only with ingredients: ${request.data}, with its cooking procedure and a Story with it.`
     console.log(prompt)
     const response = await openai.createCompletion({
       model: "text-davinci-003",

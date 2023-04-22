@@ -8,6 +8,7 @@ import SelectedIngredient from "../components/SelectedIngredient";
 import TopBar from "../components/TopBar";
 import { ingredients } from "../ingredients";
 import InputField from "../components/InputField"
+import InputPopup from "../components/InputPopup"
 
 type ingredientType = {
   "ingredient": string,
@@ -28,42 +29,49 @@ const Home = () => {
   const [showFlyout, setshowFlyout] = useState(false)
   const [Response, setResponse] = useState('')
   const [loading, setLoading] = useState(false)
+  const [apiKey, setApiKey] = useState("")
+  const [showKeyInput, setShowKeyInput] = useState(false)
 
-  const handleSubmit = async (e:any) => {
-    e.preventDefault();
+  const callGetResponse = async () => {
     setLoading(true);
+    console.log(apiKey)
     if(SelectedIngredients.length > 0){
-        await fetch('api/getResponse',{
-          method: 'POST',
-          headers: {"Content-type": "application/json;charset=UTF-8"},
-          body: JSON.stringify(SelectedIngredients)
-        }
-        ).then( res => res.json()
-        ).then( data => {
-          console.log(data)
-          if(data.success){
-            setResponse(data.choices[0].text)
-            setshowFlyout(true)
-          } else{
-            toast.error("An error occured")
-          }
-          setLoading(false)
-        }).catch(err => {
-          alert("error")
-          console.log(err)
-          setLoading(false)
+      await fetch('api/getResponse',{
+        method: 'POST',
+        headers: {"Content-type": "application/json;charset=UTF-8"},
+        body: JSON.stringify({
+          key: apiKey,
+          data: SelectedIngredients,
         })
-    } else{
-        toast.error('Please select atleast 1 ingredient',{ 
-            icon: '😊',
-            style: {
-                borderRadius: '10px',
-                background: '#333',
-                color: '#fff',
-            },
-        });
-    }
-    setLoading(false)
+      }
+      ).then( res => res.json()
+      ).then( data => {
+        console.log(data)
+        setResponse(data.choices[0].text)
+        setshowFlyout(true)
+        setLoading(false)
+      }).catch(err => {
+        toast.error("An error occured. Please look at the console")
+        console.log(err)
+        setLoading(false)
+      })
+  } else{
+      toast.error('Please select atleast 1 ingredient',{ 
+          icon: '😊',
+          style: {
+              borderRadius: '10px',
+              background: '#333',
+              color: '#fff',
+          },
+      });
+  }
+  setLoading(false)
+  setShowKeyInput(false)
+  }
+
+  const handleSubmit = (e:any) => {
+    e.preventDefault();
+    setShowKeyInput(true)
   }
 
   const addIngredient = (ingredient:ingredientType) => {
@@ -128,8 +136,9 @@ const Home = () => {
 
           <Flyout showFlyout={showFlyout} setshowFlyout={setshowFlyout} Response={Response}/>
           
+          { showKeyInput && <InputPopup setShowKeyInput={setShowKeyInput} callGetResponse={callGetResponse} onChange={(e:any)=>{setApiKey(e.target.value)}}/> }
+          
           { loading && <Loading/> }
-
       </main>
     </>
   )
