@@ -52,6 +52,7 @@ const Home = () => {
         setLoading(false)
       }).catch(err => {
         toast.error("An error occured. Please look at the console")
+        toast.error("Please give a valid API Key")
         console.log(err)
         setLoading(false)
       })
