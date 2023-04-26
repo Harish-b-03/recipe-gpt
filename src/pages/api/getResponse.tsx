@@ -13,14 +13,14 @@ export default async function handler(
   res: NextApiResponse<data>
   ){
     const request = req.body
-    console.log("request", request)
+    // console.log("request", request)
     const configuration = new Configuration({
       apiKey: request.key,
     });
 
     const openai = new OpenAIApi(configuration);
     const prompt = `Get me some recipes only with ingredients: ${request.data}, with its cooking procedure and a Story with it.`
-    console.log(prompt)
+    // console.log(prompt)
     const response = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: prompt,

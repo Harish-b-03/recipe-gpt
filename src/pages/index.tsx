@@ -109,6 +109,21 @@ const Home = () => {
     }
   }, [search])
   
+  const onChangeInput = (e:any) => {
+    setSearch(e.target.value)
+  }
+
+  const clearSearch = () => {
+    setSearch("")
+  }
+
+  const closeFlyout = () => {
+    setshowFlyout(false)
+  }
+
+  const hideKeyInput = () => {
+    setShowKeyInput(false)
+  }
 
   return (
     <>
@@ -127,7 +142,7 @@ const Home = () => {
             
             <div className="w-full h-[60%] md:h-[70%] md:overflow-y-scroll flex justify-center items-center">
                 <div className="relative">
-                  <InputField setSearch={setSearch} loading={loading} search={search} FilteredIngredients={FilteredIngredients} addIngredient={addIngredient} handleSubmit={handleSubmit}/>
+                  <InputField clearSearch={clearSearch} onChangeInput={onChangeInput} loading={loading} search={search} FilteredIngredients={FilteredIngredients} addIngredient={addIngredient} handleSubmit={handleSubmit}/>
                 </div>
             </div>  
           </div>
@@ -135,9 +150,9 @@ const Home = () => {
 
           <Footer handleSubmit={handleSubmit} />
 
-          <Flyout showFlyout={showFlyout} setshowFlyout={setshowFlyout} Response={Response}/>
+          <Flyout showFlyout={showFlyout} closeFlyout={closeFlyout} Response={Response}/>
           
-          { showKeyInput && <InputPopup setShowKeyInput={setShowKeyInput} callGetResponse={callGetResponse} onChange={(e:any)=>{setApiKey(e.target.value)}}/> }
+          { showKeyInput && <InputPopup hideKeyInput={hideKeyInput} callGetResponse={callGetResponse} onChange={(e:any)=>{setApiKey(e.target.value)}}/> }
           
           { loading && <Loading/> }
       </main>
