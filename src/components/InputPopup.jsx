@@ -1,5 +1,5 @@
 
-const InputPopup = ({hideKeyInput, callGetResponse, onChange}) => {
+const OpenAIKeyPopup = ({hideKeyInput, callGetResponse, onChange}) => {
   return (
     <div className="w-screen h-full fixed top-0 bg-[rgba(0,0,0,0.9)] z-50">
         <div className="fixed top-[100px] left-1/2 w-full max-w-sm h-fit px-8 -translate-x-1/2 bg-gray-900 rounded-xl">
@@ -22,4 +22,4 @@ const InputPopup = ({hideKeyInput, callGetResponse, onChange}) => {
   )
 }
 
-export default InputPopup
+export default OpenAIKeyPopup

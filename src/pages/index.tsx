@@ -1,4 +1,4 @@
-import Head from 'next/head'
+import Head from "next/head";
 import { useEffect, useState } from "react";
 import { toast, Toaster } from "react-hot-toast";
 import Loading from "../components/Atomic/Loading";
@@ -7,157 +7,189 @@ import Footer from "../components/Footer";
 import SelectedIngredient from "../components/SelectedIngredient";
 import TopBar from "../components/TopBar";
 import { ingredients } from "../ingredients";
-import InputField from "../components/InputField"
-import InputPopup from "../components/InputPopup"
+import SearchBox from "../components/SearchBox";
+import OpenAIKeyPopup from "../components/InputPopup";
 
-type ingredientType = {
-  "ingredient": string,
-  "ingredientId": number,
-}
+type IngredientType = {
+    ingredient: string;
+    ingredientId: number;
+};
 
 type responseType = {
-  any: Array<{
-    text: string
-  }>
-}
+    any: Array<{
+        text: string;
+    }>;
+};
 
 const Home = () => {
-  
-  const [SelectedIngredients, setSelectedIngredients] = useState<string[]>([])
-  const [search, setSearch] = useState("")
-  const [FilteredIngredients, setFilteredIngredients] = useState<ingredientType[]>(ingredients)
-  const [showFlyout, setshowFlyout] = useState(false)
-  const [Response, setResponse] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [apiKey, setApiKey] = useState("")
-  const [showKeyInput, setShowKeyInput] = useState(false)
+    const [selectedIngredients, setSelectedIngredients] = useState<string[]>(
+        []
+    );
+    const [search, setSearch] = useState("");
+    const [filteredIngredients, setFilteredIngredients] =
+        useState<IngredientType[]>(ingredients);
+    const [showFlyout, setShowFlyout] = useState(false);
+    const [response, setResponse] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [apiKey, setApiKey] = useState("");
+    const [showKeyInput, setShowKeyInput] = useState(false);
 
-  const callGetResponse = async () => {
-    setLoading(true);
-    console.log(apiKey)
-    if(SelectedIngredients.length > 0){
-      await fetch('api/getResponse',{
-        method: 'POST',
-        headers: {"Content-type": "application/json;charset=UTF-8"},
-        body: JSON.stringify({
-          key: apiKey,
-          data: SelectedIngredients,
-        })
-      }
-      ).then( res => res.json()
-      ).then( data => {
-        console.log(data)
-        setResponse(data.choices[0].text)
-        setshowFlyout(true)
-        setLoading(false)
-      }).catch(err => {
-        toast.error("An error occured. Please look at the console")
-        toast.error("Please give a valid API Key")
-        console.log(err)
-        setLoading(false)
-      })
-  } else{
-      toast.error('Please select atleast 1 ingredient',{ 
-          icon: '😊',
-          style: {
-              borderRadius: '10px',
-              background: '#333',
-              color: '#fff',
-          },
-      });
-  }
-  setLoading(false)
-  setShowKeyInput(false)
-  }
+    const callGetResponse = async () => {
+        setLoading(true);
+        console.log(apiKey);
+        if (selectedIngredients.length > 0) {
+            await fetch("api/getResponse", {
+                method: "POST",
+                headers: { "Content-type": "application/json;charset=UTF-8" },
+                body: JSON.stringify({
+                    key: apiKey,
+                    data: selectedIngredients,
+                }),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log(data);
+                    setResponse(data.choices[0].text);
+                    setShowFlyout(true);
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    toast.error("An error occured. Please look at the console");
+                    toast.error("Please give a valid API Key");
+                    console.log(err);
+                    setLoading(false);
+                });
+        } else {
+            toast.error("Please select atleast 1 ingredient", {
+                icon: "😊",
+                style: {
+                    borderRadius: "10px",
+                    background: "#333",
+                    color: "#fff",
+                },
+            });
+        }
+        setLoading(false);
+        setShowKeyInput(false);
+    };
 
-  const handleSubmit = (e:any) => {
-    e.preventDefault();
-    setShowKeyInput(true)
-  }
+    const handleSubmit = (e: any) => {
+        e.preventDefault();
+        setShowKeyInput(true);
+    };
 
-  const addIngredient = (ingredient:ingredientType) => {
-    if(SelectedIngredients.length<= 3){
-      if(SelectedIngredients.indexOf(ingredient.ingredient) < 0)
-        setSelectedIngredients(prev => [...prev, ingredient['ingredient']]);
-    }
-    else
-        toast.error('Select not more than 4 ingredients',{ 
-            icon: '😊',
-            style: {
-                borderRadius: '10px',
-                background: '#333',
-                color: '#fff',
-            },
-        });
-  }
+    const addIngredient = (ingredient: IngredientType) => {
+        if (selectedIngredients.length <= 3) {
+            if (selectedIngredients.indexOf(ingredient.ingredient) < 0)
+                setSelectedIngredients((prev) => [
+                    ...prev,
+                    ingredient["ingredient"],
+                ]);
+        } else
+            toast.error("Select not more than 4 ingredients", {
+                icon: "😊",
+                style: {
+                    borderRadius: "10px",
+                    background: "#333",
+                    color: "#fff",
+                },
+            });
+    };
 
-  useEffect(() => {
-    if(search === "")
-        setFilteredIngredients([]);
-    else{
-      const exactResults = ingredients.filter((item)=>{
-          var temp = item.ingredient.toLowerCase();
-          return temp.startsWith(search.toLowerCase());
-      })
+    useEffect(() => {
+        if (search === "") setFilteredIngredients([]);
+        else {
+            const exactResults = ingredients.filter((item) => {
+                var temp = item.ingredient.toLowerCase();
+                return temp.startsWith(search.toLowerCase());
+            });
 
-      const relevantResults = ingredients.filter((item)=>{
-          var temp = item.ingredient.toLowerCase();
-          return temp.includes(search.toLowerCase());
-      })
-      // To get the exact results first and followed by relevant results
-      setFilteredIngredients([...exactResults, ...relevantResults])
-    }
-  }, [search])
-  
-  const onChangeInput = (e:any) => {
-    setSearch(e.target.value)
-  }
+            const relevantResults = ingredients.filter((item) => {
+                var temp = item.ingredient.toLowerCase();
+                return temp.includes(search.toLowerCase());
+            });
+            // To get the exact results first and followed by relevant results
+            setFilteredIngredients([...exactResults, ...relevantResults]);
+        }
+    }, [search]);
 
-  const clearSearch = () => {
-    setSearch("")
-  }
+    const onChangeInput = (e: any) => {
+        setSearch(e.target.value);
+    };
 
-  const closeFlyout = () => {
-    setshowFlyout(false)
-  }
+    const clearSearch = () => {
+        setSearch("");
+    };
 
-  const hideKeyInput = () => {
-    setShowKeyInput(false)
-  }
+    const closeFlyout = () => {
+        setShowFlyout(false);
+    };
 
-  return (
-    <>
-      <Head>
-        <title>recipe - GPT</title>
-        <meta name="description" content="RecipeGPT is a recipe recommendation app built on OpenAI GPT-3 API" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main className="w-full h-screen p-0 m-0 flex flex-col justify-between items-center bg-black">
-          
-          <TopBar/>
-          
-          <div className="pt-[70px] w-full h-full">
-            <SelectedIngredient Ingredients={SelectedIngredients} setSelectedIngredients={setSelectedIngredients}/>
-            
-            <div className="w-full h-[60%] md:h-[70%] md:overflow-y-scroll flex justify-center items-center">
-                <div className="relative">
-                  <InputField clearSearch={clearSearch} onChangeInput={onChangeInput} loading={loading} search={search} FilteredIngredients={FilteredIngredients} addIngredient={addIngredient} handleSubmit={handleSubmit}/>
+    const hideKeyInput = () => {
+        setShowKeyInput(false);
+    };
+
+    return (
+        <>
+            <Head>
+                <title>recipe - GPT</title>
+                <meta
+                    name="description"
+                    content="RecipeGPT is a recipe recommendation app built on OpenAI GPT-3 API"
+                />
+                <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1"
+                />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
+            <main className="w-full h-screen p-0 m-0 flex flex-col justify-between items-center bg-black">
+                <TopBar />
+
+                <div className="pt-[70px] w-full h-full">
+                    <SelectedIngredient
+                        ingredients={selectedIngredients}
+                        setSelectedIngredients={setSelectedIngredients}
+                    />
+
+                    <div className="w-full h-[60%] md:h-[70%] md:overflow-y-scroll flex justify-center items-center">
+                        <div className="relative">
+                            <SearchBox
+                                clearSearch={clearSearch}
+                                onChangeInput={onChangeInput}
+                                loading={loading}
+                                search={search}
+                                filteredIngredients={filteredIngredients}
+                                addIngredient={addIngredient}
+                                handleSubmit={handleSubmit}
+                            />
+                        </div>
+                    </div>
                 </div>
-            </div>  
-          </div>
-          <Toaster position="bottom-center" gutter={8}/>
+                <Toaster position="bottom-center" gutter={8} />
 
-          <Footer handleSubmit={handleSubmit} />
+                <Footer handleSubmit={handleSubmit} />
 
-          <Flyout showFlyout={showFlyout} closeFlyout={closeFlyout} Response={Response}/>
-          
-          { showKeyInput && <InputPopup hideKeyInput={hideKeyInput} callGetResponse={callGetResponse} onChange={(e:any)=>{setApiKey(e.target.value)}}/> }
-          
-          { loading && <Loading/> }
-      </main>
-    </>
-  )
-}
+                <Flyout
+                    showFlyout={showFlyout}
+                    closeFlyout={closeFlyout}
+                    response={response}
+                />
 
-export default Home
+                {showKeyInput && (
+                    <OpenAIKeyPopup
+                        hideKeyInput={hideKeyInput}
+                        callGetResponse={callGetResponse}
+                        onChange={(e: any) => {
+                            setApiKey(e.target.value);
+                        }}
+                    />
+                )}
+
+                {loading && <Loading />}
+            </main>
+        </>
+    );
+};
+
+export default Home;
