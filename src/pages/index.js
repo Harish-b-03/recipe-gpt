@@ -8,26 +8,12 @@ import SelectedIngredient from "../components/SelectedIngredient";
 import TopBar from "../components/TopBar";
 import { ingredients } from "../ingredients";
 import SearchBox from "../components/SearchBox";
-import OpenAIKeyPopup from "../components/InputPopup";
-
-type IngredientType = {
-    ingredient: string;
-    ingredientId: number;
-};
-
-type responseType = {
-    any: Array<{
-        text: string;
-    }>;
-};
+import OpenAIKeyPopup from "../components/OpenAIKeyPopup";
 
 const Home = () => {
-    const [selectedIngredients, setSelectedIngredients] = useState<string[]>(
-        []
-    );
+    const [selectedIngredients, setSelectedIngredients] = useState([]);
     const [search, setSearch] = useState("");
-    const [filteredIngredients, setFilteredIngredients] =
-        useState<IngredientType[]>(ingredients);
+    const [filteredIngredients, setFilteredIngredients] = useState(ingredients);
     const [showFlyout, setShowFlyout] = useState(false);
     const [response, setResponse] = useState("");
     const [loading, setLoading] = useState(false);
@@ -36,7 +22,6 @@ const Home = () => {
 
     const callGetResponse = async () => {
         setLoading(true);
-        console.log(apiKey);
         if (selectedIngredients.length > 0) {
             await fetch("api/getResponse", {
                 method: "POST",
@@ -48,7 +33,6 @@ const Home = () => {
             })
                 .then((res) => res.json())
                 .then((data) => {
-                    console.log(data);
                     setResponse(data.choices[0].text);
                     setShowFlyout(true);
                     setLoading(false);
@@ -56,7 +40,6 @@ const Home = () => {
                 .catch((err) => {
                     toast.error("An error occured. Please look at the console");
                     toast.error("Please give a valid API Key");
-                    console.log(err);
                     setLoading(false);
                 });
         } else {
@@ -73,12 +56,12 @@ const Home = () => {
         setShowKeyInput(false);
     };
 
-    const handleSubmit = (e: any) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         setShowKeyInput(true);
     };
 
-    const addIngredient = (ingredient: IngredientType) => {
+    const addIngredient = (ingredient) => {
         if (selectedIngredients.length <= 3) {
             if (selectedIngredients.indexOf(ingredient.ingredient) < 0)
                 setSelectedIngredients((prev) => [
@@ -113,7 +96,7 @@ const Home = () => {
         }
     }, [search]);
 
-    const onChangeInput = (e: any) => {
+    const onChangeInput = (e) => {
         setSearch(e.target.value);
     };
 
@@ -180,7 +163,7 @@ const Home = () => {
                     <OpenAIKeyPopup
                         hideKeyInput={hideKeyInput}
                         callGetResponse={callGetResponse}
-                        onChange={(e: any) => {
+                        onChange={(e) => {
                             setApiKey(e.target.value);
                         }}
                     />

@@ -68,7 +68,7 @@ const SearchBox = ({
                         disabled={loading}
                         onClick={handleSubmit}
                     >
-                        {loading ? "Loading..." : "Get Recipes"}
+                        {loading ? "Loading..." : "Get Recipe"}
                     </button>
                 </div>
             </form>
